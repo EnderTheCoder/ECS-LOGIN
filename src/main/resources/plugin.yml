@@ -1,0 +1,19 @@
+name: ECS-LOGIN
+version: '${project.version}'
+main: ecslogin.ecslogin.ECSLOGIN
+api-version: 1.18
+description: A customed plugin made for ECS.
+commands:
+  login:
+    aliases:
+      - l
+    description: A command that enable user to login
+    permission: ecs.login
+    permission-message: You need to have the permission to use this command. Please contact your server OP.
+    usage: | 
+      /login <密码> 登录
+      /l <密码> 登录
+permissions:
+  ecs.login:
+    description: login
+    default: true
