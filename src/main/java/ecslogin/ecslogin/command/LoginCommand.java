@@ -9,9 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class LoginCommand implements CommandExecutor {
 
     @Override
@@ -24,7 +21,7 @@ public class LoginCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (Auth.isLoginCompleted.get(player) == null) {
+        if (Auth.isOnLoginSession.get(player) == null) {
             player.sendMessage(ChatColor.YELLOW + "[ECS-LOGIN]你已经登录，无需再次登录");
             return true;
         }
@@ -35,7 +32,7 @@ public class LoginCommand implements CommandExecutor {
                 NewUserInit.init(player);
                 player.sendMessage(ChatColor.GREEN + String.format("[ECS-LOGIN]新玩家%s您好，欢迎加入ECS机械动力服务器，请开始您的建造之旅吧，有问题随时可群内提问。", player.getDisplayName()));
             }
-            Auth.isLoginCompleted.put(player, null);
+            Auth.isOnLoginSession.put(player, null);
             return true;
         } else {
             player.kickPlayer("你输入了错误的密码");

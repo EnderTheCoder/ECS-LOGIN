@@ -1,19 +1,17 @@
 package ecslogin.ecslogin.auth;
 
 import ecslogin.ecslogin.database.Mysql;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.bukkit.Bukkit.getLogger;
-
 public class Auth {
-    public static Map<Player, Boolean> isLoginCompleted = new HashMap<>();;
+    public static Map<OfflinePlayer, Boolean> isOnLoginSession = new HashMap<>();;
 
-    public static boolean authPassword(Player player, String password) {
+    public static boolean authPassword(OfflinePlayer player, String password) {
         ResultSet resultSet = getPlayerData(player);
         String realPassword = "";
         try {
@@ -26,12 +24,17 @@ public class Auth {
         return realPassword.equals(password);
     }
 
-    public static boolean isUserExists(Player player) {
+    public static boolean isUserExists(OfflinePlayer player) {
         ResultSet resultSet = getPlayerData(player);
-        return !(resultSet == null);
+        try {
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
-    public static String isUserBanned(Player player) {
+    public static String isUserBanned(OfflinePlayer player) {
         ResultSet resultSet = getPlayerData(player);
         String bannedReason = null;
         try {
@@ -44,7 +47,7 @@ public class Auth {
         return bannedReason;
     }
 
-    public static boolean isPlayerFirstLogin(Player player) {
+    public static boolean isPlayerFirstLogin(OfflinePlayer player) {
         ResultSet resultSet = getPlayerData(player);
         try {
             assert resultSet != null;
@@ -56,7 +59,7 @@ public class Auth {
         return false;
     }
 
-    public static int getUserLevel(Player player) {
+    public static int getUserLevel(OfflinePlayer player) {
         ResultSet resultSet = getPlayerData(player);
         int userLevel = 0;
         try {
@@ -71,7 +74,7 @@ public class Auth {
 
 
 
-    public static ResultSet getPlayerData(Player player) {
+    public static ResultSet getPlayerData(OfflinePlayer player) {
         Mysql m = new Mysql();
         m.prepareSql("SELECT * FROM user WHERE username = ?");
         m.setData(1, player.getName());
